@@ -4,10 +4,12 @@ import {BSON, MongoClient, ObjectId, WithId} from "mongodb";
 import "../../envConfig"
 import {unstable_cache, unstable_expireTag} from "next/cache";
 
-const mongo = new MongoClient(process.env.MONGO_URL!);
-await mongo.connect();
-const db = mongo.db(process.env.MONGO_DB || "paws");
-const collection = db.collection("prints");
+async function getCollection() {
+    const mongo = new MongoClient(process.env.MONGO_URL!);
+    await mongo.connect();
+    const db = mongo.db(process.env.MONGO_DB || "paws");
+    return db.collection("prints");
+}
 
 function convert(response: WithId<BSON.Document>): PawPrint {
     return {
@@ -22,6 +24,7 @@ function convert(response: WithId<BSON.Document>): PawPrint {
 }
 
 export async function insertOrUpdate(print: PawPrint) {
+    const collection = await getCollection()
     let oid: ObjectId
     if (print.id) {
         // Update
@@ -41,6 +44,7 @@ export async function insertOrUpdate(print: PawPrint) {
 }
 
 export async function deletePrint(id: string) {
+    const collection = await getCollection()
     await collection.deleteOne({_id: new ObjectId(id)})
     unstable_expireTag("prints")
 }
@@ -51,6 +55,7 @@ export async function deletePrint(id: string) {
  * Invalidate the cache with the `prints` key.
  */
 export const getPrint = unstable_cache(async (id: string): Promise<PawPrint|null> => {
+    const collection = await getCollection()
     const result = await collection.findOne({_id: new ObjectId(id)})
     return result ? convert(result) : null;
 }, undefined, {
@@ -69,6 +74,7 @@ export const getPrints = unstable_cache(async (
     dateStart: string = "",
     tags: string[] = [],
 ): Promise<PawPrint[]> => {
+    const collection = await getCollection()
     const query: Record<string, unknown> = {};
     if (dateStart) {
         query["date"] ={

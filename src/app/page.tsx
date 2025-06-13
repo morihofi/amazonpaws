@@ -3,6 +3,8 @@ import {PawPrint} from "@/types/pawPrint";
 import PawTrack from "@/components/PawTrack";
 import {getPrints} from "@/lib/data";
 
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
   const prints: PawPrint[] = await getPrints();
   return (

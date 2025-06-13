@@ -1,6 +1,6 @@
 import {getFeed} from "@/lib/data/feed";
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
     const feed = await getFeed();
