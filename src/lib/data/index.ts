@@ -1,13 +1,24 @@
 'use server';
 import {PawPrint} from "@/types/pawPrint";
-import {BSON, MongoClient, ObjectId, WithId} from "mongodb";
-import "../../envConfig"
+import {BSON, MongoClient, ObjectId, WithId, Collection} from "mongodb";
 import {unstable_cache, unstable_expireTag} from "next/cache";
 
-const mongo = new MongoClient(process.env.MONGO_URL!);
-await mongo.connect();
-const db = mongo.db(process.env.MONGO_DB || "paws");
-const collection = db.collection("prints");
+let client: MongoClient | null = null;
+let collection: Collection<BSON.Document> | null = null;
+
+async function getCollection() {
+    if (!collection) {
+        const url = process.env.MONGO_URL;
+        if (!url) {
+            throw new Error("MONGO_URL is not defined");
+        }
+        client = new MongoClient(url);
+        await client.connect();
+        const db = client.db(process.env.MONGO_DB || "paws");
+        collection = db.collection("prints");
+    }
+    return collection!;
+}
 
 function convert(response: WithId<BSON.Document>): PawPrint {
     return {
@@ -22,6 +33,7 @@ function convert(response: WithId<BSON.Document>): PawPrint {
 }
 
 export async function insertOrUpdate(print: PawPrint) {
+    const collection = await getCollection();
     let oid: ObjectId
     if (print.id) {
         // Update
@@ -41,6 +53,7 @@ export async function insertOrUpdate(print: PawPrint) {
 }
 
 export async function deletePrint(id: string) {
+    const collection = await getCollection();
     await collection.deleteOne({_id: new ObjectId(id)})
     unstable_expireTag("prints")
 }
@@ -51,6 +64,7 @@ export async function deletePrint(id: string) {
  * Invalidate the cache with the `prints` key.
  */
 export const getPrint = unstable_cache(async (id: string): Promise<PawPrint|null> => {
+    const collection = await getCollection();
     const result = await collection.findOne({_id: new ObjectId(id)})
     return result ? convert(result) : null;
 }, undefined, {
@@ -80,6 +94,7 @@ export const getPrints = unstable_cache(async (
             $in: tags
         }
     }
+    const collection = await getCollection();
     let cursor = collection.find(query).sort({"date": -1})
     if (maxResults) {
         cursor = cursor.limit(maxResults).skip(pagination)
@@ -90,3 +105,4 @@ export const getPrints = unstable_cache(async (
     revalidate: 500,
     tags: ["prints"]
 })
+
