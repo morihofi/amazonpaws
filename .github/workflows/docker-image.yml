@@ -3,6 +3,15 @@ name: Docker
 on:
   push:
     branches: [ "trunk" ]
+    paths:
+      - "**/*.ts"
+      - "**/*.tsx"
+      - "**/*.js"
+      - "**/*.jsx"
+      - "public/**"
+      - "package.json"
+      - "package-lock.json"
+      - "Dockerfile"
 
   pull_request:
     branches: [ "trunk" ]
