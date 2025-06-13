@@ -12,6 +12,7 @@ on:
       - "package.json"
       - "package-lock.json"
       - "Dockerfile"
+      - ".github/workflows/docker-image.yml"
 
   pull_request:
     branches: [ "trunk" ]
