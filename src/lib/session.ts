@@ -2,21 +2,35 @@ import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
 import { SessionPayload } from '@/types/sessionPayload'
 import {cookies} from "next/headers";
+import { randomBytes } from "crypto";
 
-const secretKey = process.env.SECRET_KEY
-const encodedKey = new TextEncoder().encode(secretKey)
+let encodedKey: Uint8Array | null = null;
+
+function getEncodedKey() {
+    if (!encodedKey) {
+        let secret = process.env.SECRET_KEY;
+        if (!secret) {
+            console.log('Generating secret key');
+            secret = randomBytes(16).toString('hex');
+        }
+        encodedKey = new TextEncoder().encode(secret);
+    }
+    return encodedKey;
+}
 
 export async function encrypt(payload: SessionPayload) {
+    const key = getEncodedKey();
     return new SignJWT(payload)
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
         .setExpirationTime('7d')
-        .sign(encodedKey)
+        .sign(key)
 }
 
 export async function decrypt(session: string | undefined = '') {
     try {
-        const { payload } = await jwtVerify(session, encodedKey, {
+        const key = getEncodedKey();
+        const { payload } = await jwtVerify(session, key, {
             algorithms: ['HS256'],
         })
         return payload
@@ -68,3 +82,4 @@ export async function isLoggedIn(): Promise<boolean> {
 
     return session?.login == true
 }
+
