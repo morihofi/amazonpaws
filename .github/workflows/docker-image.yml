@@ -60,7 +60,6 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            varbinthefox/yate
 
       # Build Docker image with Buildx (don't push)
       # https://github.com/docker/build-push-action
@@ -84,7 +83,7 @@ jobs:
         run: |
           set -e
           for tag in $DOCKER_METADATA_OUTPUT_TAGS; do
-              all_versions=$(docker run --rm $tag yate --version 2>&1 | cut -d ' ' -f2,3,4)
+              all_versions=$(docker run --rm $tag --version 2>&1 | cut -d ' ' -f2,3,4)
               semantic=$(echo $all_versions | cut -d ' ' -f 1)
               major=$(echo $semantic | cut -d '.' -f 1)
               release=$(echo $all_versions | cut -d ' ' -f 2)
