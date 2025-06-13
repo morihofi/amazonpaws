@@ -42,8 +42,6 @@ RUN \
   else npm run build; \
   fi
 
-RUN ls -laR /app
-
 # Note: It is not necessary to add an intermediate step that does a full copy of `node_modules` here
 
 # Step 2. Production image, copy all the files and run next
