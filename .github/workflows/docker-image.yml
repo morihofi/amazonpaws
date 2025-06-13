@@ -73,8 +73,9 @@ jobs:
 
       # Build Docker image with Buildx (don't push)
       # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push
+      - name: Build Docker image
+        if: ${{ github.event_name == 'pull_request' }}
+        id: build
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           context: .
@@ -85,26 +86,18 @@ jobs:
           cache-to: type=gha,mode=max
           load: true
 
-      # Push with name and hash from container
-      - name: push
-        if: github.event_name != 'pull_request'
-        env:
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-        run: |
-          set -e
-          for tag in $DOCKER_METADATA_OUTPUT_TAGS; do
-              all_versions=$(docker run --rm $tag --version 2>&1 | cut -d ' ' -f2,3,4)
-              semantic=$(echo $all_versions | cut -d ' ' -f 1)
-              major=$(echo $semantic | cut -d '.' -f 1)
-              release=$(echo $all_versions | cut -d ' ' -f 2)
-              commit=$(echo $all_versions | cut -d ' ' -f 3 | tr -d 'r')
-              image=$(echo $tag | cut -d ':' -f 1)
-              for version in $major $semantic "${semantic}.$release" $commit latest; do
-                echo $image:$version
-                docker tag $tag $image:$version
-                docker push $image:$version
-              done
-          done
+      - name: Build and Docker image
+        if: ${{ github.event_name != 'pull_request' }}
+        id: build-and-push
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        with:
+          context: .
+          push: true
+          # tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          load: true
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
