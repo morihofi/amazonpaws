@@ -1,0 +1,60 @@
+name: "\U0001F50E Check frontend"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "*"
+      - "!draft/*"
+    paths:
+      - "**/*.ts"
+      - "**/*.tsx"
+      - "**/*.js"
+      - "**/*.jsx"
+      - "public/**"
+      - "package.json"
+      - "package-lock.json"
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  lint:
+    name: "\U0001F50E Lint"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "\U0001F4E5 Checkout code"
+        uses: actions/checkout@v4
+
+      - name: "\U0001F527 Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: "\u26A1 Install dependencies"
+        run: npm ci
+
+      - name: "\U0001F50E Run linter"
+        run: npm run lint
+
+  build:
+    name: "\U0001F3D7\uFE0F Build"
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: "\U0001F4E5 Checkout code"
+        uses: actions/checkout@v4
+
+      - name: "\U0001F527 Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: "\u26A1 Install dependencies"
+        run: npm ci
+
+      - name: "\U0001F3D7\uFE0F Build Next.js app"
+        run: npm run build
