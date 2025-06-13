@@ -1,8 +1,6 @@
 import {getPrints} from "@/lib/data";
 import PawTrack from "@/components/PawTrack";
 
-export const dynamic = 'force-dynamic'
-
 export async function generateMetadata({
     params,
 }: {

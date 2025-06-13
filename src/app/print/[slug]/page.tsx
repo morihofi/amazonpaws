@@ -3,8 +3,6 @@ import {notFound} from "next/navigation";
 import PawTrack from "@/components/PawTrack";
 import Link from "next/link";
 
-export const dynamic = 'force-dynamic'
-
 export async function generateMetadata({
     params,
 }: {

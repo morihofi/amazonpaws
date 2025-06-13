@@ -2,8 +2,6 @@ import {getPrint} from "@/lib/data";
 import {redirect} from "next/navigation";
 import {Editor} from "@/app/edit/components/Editor";
 
-export const dynamic = 'force-dynamic'
-
 export default async function Page({
                                        params,
                                    }: {

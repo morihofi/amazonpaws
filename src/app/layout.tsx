@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import amazonpaws from "@/resources/images/amazonpaws.svg"
+import amazonpaws from "@/resources/images/amazonpaws.svg";
 import Image from "next/image";
 import Link from "next/link";
+
+export const dynamic = 'force-dynamic';
 
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
