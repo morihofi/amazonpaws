@@ -3,10 +3,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlusCircle} from "@fortawesome/free-solid-svg-icons";
 import {isLoggedIn} from "@/lib/session";
 import {redirect} from "next/navigation";
-import * as url from "node:url";
-import {unstable_expireTag} from "next/cache";
 import {revalidate} from "@/app/edit/actions/revalidate";
 import {deletePrintAction} from "@/app/edit/actions/deletePrintAction";
+import Link from "next/link";
 
 export default async function EditPage() {
     if (!await isLoggedIn()) {
@@ -16,7 +15,7 @@ export default async function EditPage() {
     return <div className="frame">
         <h1>Edit</h1>
         <p>
-            <a href="/edit/new">New <FontAwesomeIcon icon={faPlusCircle}/></a>
+            <Link href="/edit/new">New <FontAwesomeIcon icon={faPlusCircle}/></Link>
         </p>
         <h2>Cache</h2>
         <form action={revalidate}>
@@ -25,7 +24,7 @@ export default async function EditPage() {
         <h2>Prints</h2>
         <ul style={{paddingLeft: "1em"}}>
             {prints.map(print => (
-                <li key={print.id}><a href={`/edit/${print.id}`}>{print.heading}</a> ({print.date})
+                <li key={print.id}><Link href={`/edit/${print.id}`}>{print.heading}</Link> ({print.date})
                 <form action={deletePrintAction}>
                     <input type="hidden" name="id" value={print.id} />
                     <input type="submit" value="Delete" />

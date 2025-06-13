@@ -5,9 +5,9 @@ import {Editor} from "@/app/edit/components/Editor";
 export default async function Page({
                                        params,
                                    }: {
-    params: { slug: string }
+    params: Promise<{ slug: string }>
 }) {
-    let {slug} = await params;
+    const { slug } = await params;
     let print = undefined;
     if (slug !== 'new') {
         print = await getPrint(slug)

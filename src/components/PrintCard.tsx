@@ -1,8 +1,9 @@
 import { PawPrint } from "@/types/pawPrint";
-import styles from "./PrintCard.module.css"
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faLink} from "@fortawesome/free-solid-svg-icons";
-import {Share, ShareMastodon} from "@/components/Share";
+import styles from "./PrintCard.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { Share, ShareMastodon } from "@/components/Share";
+import Image from "next/image";
 
 type PawPrintProps = {
     print: PawPrint;
@@ -12,7 +13,7 @@ function figure(print: PawPrint) {
     if (print.image) {
         return (
             <figure>
-                <img src={print.image.src} alt={print.image.alt} />
+                <Image src={print.image.src} alt={print.image.alt} width={200} height={200} />
                 <figcaption>{print.image.caption}</figcaption>
             </figure>
         )

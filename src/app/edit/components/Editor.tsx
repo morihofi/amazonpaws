@@ -1,17 +1,17 @@
 'use client';
-import {Image, PawPrint} from "@/types/pawPrint";
-import styles from "../page.module.css"
-import {useActionState} from "react";
-import {authenticate} from "@/app/login/actions/auth";
-import {editOrCreate} from "@/app/edit/actions/editOrCreate";
+import Image from "next/image";
+import type { Image as PawImage, PawPrint } from "@/types/pawPrint";
+import styles from "../page.module.css";
+import { useActionState } from "react";
+import { editOrCreate } from "@/app/edit/actions/editOrCreate";
 
 
 
 type EditorProps = {
-    print: PawPrint|undefined;
-}
+    print: PawPrint | undefined;
+};
 
-function ImageEditor({image}: {image: Image|null|undefined}) {
+function ImageEditor({ image }: { image: PawImage | null | undefined }) {
     return <>
         <Preview src={image?.src} />
         <label>Image (File or URL)</label>
@@ -25,8 +25,8 @@ function ImageEditor({image}: {image: Image|null|undefined}) {
     </>
 }
 
-function Preview({src}: {src: string|undefined}) {
-    if (src) return <img src={src} alt="" />
+function Preview({ src }: { src: string | undefined }) {
+    if (src) return <Image src={src} alt="" width={200} height={200} />
     return <></>
 }
 

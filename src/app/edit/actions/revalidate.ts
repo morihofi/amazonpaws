@@ -3,7 +3,7 @@ import {redirect} from "next/navigation";
 import {isLoggedIn} from "@/lib/session";
 import {unstable_expireTag} from "next/cache";
 
-export async function revalidate(formData: FormData) {
+export async function revalidate() {
     if (!(await isLoggedIn())) {
         return redirect('/login')
     }
