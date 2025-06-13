@@ -4,7 +4,7 @@ import {authenticate} from "@/app/login/actions/auth";
 import {useActionState} from "react";
 
 export default function LoginPage() {
-    const [state, action, pending] = useActionState(authenticate, undefined)
+    const [state, action] = useActionState(authenticate, undefined)
     return (
     <div className="frame">
         <h1>Authentication</h1>

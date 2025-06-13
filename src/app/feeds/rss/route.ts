@@ -1,4 +1,3 @@
-import {getPrints} from "@/lib/data";
 import {getFeed} from "@/lib/data/feed";
 
 export const dynamic = 'force-static'

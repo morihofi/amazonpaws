@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import amazonpaws from "@/resources/images/amazonpaws.svg"
 import Image from "next/image";
+import Link from "next/link";
 
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
@@ -28,13 +29,13 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <header>
-          <a className="logo" href="/">
+          <Link className="logo" href="/">
             <Image src={amazonpaws} alt="Amazon Logo, but with paws." height="100" />
             <div>
               <h1>Amazon Paws</h1>
               <p style={{margin: 0}}>The paw prints Amazon leaves on the world.</p>
             </div>
-          </a>
+          </Link>
         </header>
         <main>
         {children}

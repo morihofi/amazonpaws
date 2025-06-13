@@ -1,11 +1,12 @@
 import {getPrint} from "@/lib/data";
 import {notFound} from "next/navigation";
 import PawTrack from "@/components/PawTrack";
+import Link from "next/link";
 
 export async function generateMetadata({
     params,
 }: {
-    params: { slug: string }
+    params: Promise<{ slug: string }>
 }) {
     const { slug } = await params;
     const print = await getPrint(slug);
@@ -20,9 +21,9 @@ export async function generateMetadata({
 }
 
 export default async function Page({
-     params,
- }: {
-    params: { slug: string }
+       params,
+   }: {
+      params: Promise<{ slug: string }>
 }) {
     const { slug } = await params;
     const print = await getPrint(slug);
@@ -32,7 +33,7 @@ export default async function Page({
     return (
         <>
             <PawTrack initialPrints={[print]} />
-            <a className="restart" href="/public">Load from beginning</a>
+            <Link className="restart" href="/public">Load from beginning</Link>
         </>
     )
 }

@@ -17,7 +17,7 @@ export function shareMastodon(data: ShareData) {
     localStorage.setItem("mastodon", mastodonUrl);
     const url = new URL(mastodonUrl);
     url.pathname = "/share";
-    const params: any = {}
+    const params: Record<string, string> = {}
     if (data.title) {
         params["title"] = data.title;
     }

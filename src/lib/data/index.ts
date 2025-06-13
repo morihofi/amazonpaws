@@ -2,7 +2,7 @@
 import {PawPrint} from "@/types/pawPrint";
 import {BSON, MongoClient, ObjectId, WithId} from "mongodb";
 import "../../envConfig"
-import {revalidateTag, unstable_cache, unstable_expireTag} from "next/cache";
+import {unstable_cache, unstable_expireTag} from "next/cache";
 
 const mongo = new MongoClient(process.env.MONGO_URL!);
 await mongo.connect();
@@ -25,14 +25,13 @@ export async function insertOrUpdate(print: PawPrint) {
     let oid: ObjectId
     if (print.id) {
         // Update
-        const data: any = print
-        oid = new ObjectId(print.id)
-        delete data.id;
-        await collection.replaceOne({_id: oid}, data);
+        const { id, ...data } = print
+        oid = new ObjectId(id)
+        await collection.replaceOne({ _id: oid }, data)
     } else {
         // Insert
-        const data: any = print
-        delete data.id;
+        const { id, ...data } = print
+        void id;
         const result = await collection.insertOne(data)
         oid = result.insertedId
     }
@@ -70,7 +69,7 @@ export const getPrints = unstable_cache(async (
     dateStart: string = "",
     tags: string[] = [],
 ): Promise<PawPrint[]> => {
-    const query: any = {};
+    const query: Record<string, unknown> = {};
     if (dateStart) {
         query["date"] ={
                 $lte: dateStart
