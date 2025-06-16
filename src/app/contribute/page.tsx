@@ -1,6 +1,7 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBluesky, faGit, faGitAlt, faGithub, faMastodon} from "@fortawesome/free-brands-svg-icons";
 import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
+import {BSKY_ACCOUNT, BSKY_URL, MASTODON_ACCOUNT, MASTODON_URL} from "@/lib/constants";
 
 export default function AboutPage() {
     return <div className="frame">
@@ -22,8 +23,8 @@ export default function AboutPage() {
         <h2>Contact details</h2>
         <p>You can write a private message on the social media channels:</p>
         <ul>
-            <li><FontAwesomeIcon icon={faMastodon} /> Mastodon <a href="#" target="_blank">@amazonpaws@...</a></li>
-            <li><FontAwesomeIcon icon={faBluesky} /> BlueSky <a href="#" target="_blank">@amazonpaws.com</a></li>
+            <li><FontAwesomeIcon icon={faMastodon} /> Mastodon <a href={MASTODON_URL} target="_blank">{MASTODON_ACCOUNT}</a></li>
+            <li><FontAwesomeIcon icon={faBluesky} /> BlueSky <a href={BSKY_URL} target="_blank">{BSKY_ACCOUNT}</a></li>
         </ul>
         <p>You can create issues at these code forges:</p>
         <ul>
