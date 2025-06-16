@@ -1,22 +1,26 @@
 import {getPrint} from "@/lib/data";
 import {notFound} from "next/navigation";
-import PawTrack from "@/components/PawTrack";
+import {FinalButton, FinalLink, PawTrack} from "@/components/PawTrack";
 import Link from "next/link";
+import {preSignedPrint} from "@/lib/data/s3";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faHome} from "@fortawesome/free-solid-svg-icons";
+import {SITE_TITLE} from "@/lib/constants";
+import type {Metadata} from "next";
 
 export async function generateMetadata({
     params,
 }: {
     params: Promise<{ slug: string }>
-}) {
+}): Promise<Metadata> {
     const { slug } = await params;
     const print = await getPrint(slug);
-    console.log(slug);
     if (!print) {
         return notFound()
     }
     return {
-        title: "Amazon Paws",
-        description: "The paw prints Amazon leaves on the world.",
+        title: `${print.heading} — ${SITE_TITLE}`,
+        description: print.text,
     }
 }
 
@@ -30,10 +34,13 @@ export default async function Page({
     if (!print) {
         return notFound()
     }
+    const preSigned = await preSignedPrint(print);
     return (
         <>
-            <PawTrack initialPrints={[print]} />
-            <Link className="restart" href="/public">Load from beginning</Link>
+            <PawTrack initialPrints={[preSigned]} />
+            <FinalLink href="/">
+                <FontAwesomeIcon icon={faHome} />&nbsp;Start from the beginning.
+            </FinalLink>
         </>
     )
 }

@@ -1,16 +1,18 @@
 import styles from "./page.module.css";
-import {PawPrint} from "@/types/pawPrint";
-import PawTrack from "@/components/PawTrack";
 import {getPrints} from "@/lib/data";
+import {InteractivePawTrack} from "@/components/PawTrack";
+import {preSignedPrints} from "@/lib/data/s3";
 
 export const dynamic = 'force-dynamic'
 
 export default async function Home() {
-  const prints: PawPrint[] = await getPrints();
-  return (
-      <>
-        <PawTrack initialPrints={prints}/>
-        <a className={styles.top} href="#">Back To Top</a>
-      </>
-  );
+    const initialPrints = await getPrints();
+    const wrappedPrints = await preSignedPrints(initialPrints);
+
+    return (
+        <>
+            <InteractivePawTrack initialPrints={wrappedPrints}/>
+            <a className={styles.top} href="#">Back To Top</a>
+        </>
+    );
 }

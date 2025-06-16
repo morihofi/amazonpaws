@@ -21,3 +21,17 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
       ME_CONFIG_BASICAUTH: false
+
+  minio:
+    image: quay.io/minio/minio
+    ports:
+      - '127.0.0.1:9000:9000'
+      - '127.0.0.1:9001:9001'
+    environment:
+      MINIO_ROOT_USER: Cohsaeku3hee
+      MINIO_ROOT_PASSWORD: eaqu5Jeef1ooWue4ohpe0Zei
+    command:
+      - "server"
+      - "/data"
+      - -console-address
+      - ":9001"

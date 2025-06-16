@@ -64,7 +64,7 @@ a:active, a:hover {
   color: var(--highlight);
 }
 
-h1, h2 {
+h1 {
   font-family: "Amazon Ember Display", Helvetica, sans-serif;
   font-weight: lighter;
   font-size: 2rem;
@@ -74,13 +74,6 @@ h1, h2 {
 }
 h1 {
   font-size: 2.5rem;
-}
-h3 {
-  font-family: "Amazon Ember", Helvetica, sans-serif;
-  font-weight: bold;
-  font-size: 1.8rem;
-  margin-bottom: 0.5em;
-  letter-spacing: -0.023rem;
 }
 
 * {
@@ -93,11 +86,48 @@ body {
   display: grid;
   grid-template-areas:
     "header"
+    "nav"
+    "aside"
     "content"
     "footer";
+  grid-template-rows: auto auto auto 1fr auto;
+  min-height: 100vh;
 }
 
-header {}
+header {
+  grid-area: header;
+  padding: 0 4em;
+}
+
+nav {
+  grid-area: nav;
+  /*background: var(--blue);*/
+  padding: 1em 4em;
+  a {
+    color: var(--white);
+    padding: 1em;
+
+  }
+  a:hover, a:active {
+    color: var(--white)
+  }
+}
+
+aside {
+  grid-area: aside;
+  background: var(--highlight-background);
+  color: var(--highlight-foreground);
+  padding: 1em;
+  text-align: center;
+  a{
+    color: var(--highlight-foreground);
+    text-decoration: underline;
+    font-weight: bolder;
+  }
+  a:hover, a:active {
+    color: var(--links);
+  }
+}
 
 .logo {
   display: flex;
@@ -114,10 +144,38 @@ header {}
 main {
   background-color: var(--main-background);
   color: var(--main-foreground);
+  grid-area: content;
 }
 
 .frame {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 5em 10em;
+  padding: 2em 4em;
+
+  h1, h2 {
+    font-family: "Amazon Ember", Helvetica, sans-serif;
+    font-weight: normal;
+    font-size: 3rem;
+    line-height: 4.2rem;
+    margin-top: 0.25em;
+    margin-bottom: 0.5em;
+  }
+  h2 {
+    font-size: 2rem;
+    line-height: 2.8rem;
+  }
+  p, li {
+    font-family: "Amazon Ember", Helvetica, sans-serif;
+    font-weight: normal;
+    line-height: 2rem;
+  }
+  li {
+    margin-left: 1em;
+  }
+}
+
+.hint {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1em;
 }

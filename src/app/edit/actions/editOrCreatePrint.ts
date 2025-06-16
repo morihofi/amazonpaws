@@ -5,8 +5,19 @@ import {isLoggedIn} from "@/lib/session";
 import {Image, PawPrint} from "@/types/pawPrint";
 import {insertOrUpdate} from "@/lib/data";
 import {redirect} from "next/navigation";
+import {deleteObject, getPreSignedUrl, upload} from "@/lib/data/s3";
+import path from "node:path";
+import {randomBytes} from "node:crypto";
+import {UPLOAD_TO_S3} from "@/lib/constants";
 
-export async function editOrCreate(state: EditFormState, formData: FormData): Promise<EditFormState> {
+async function conditionalPresign(url: string|undefined): Promise<string|undefined> {
+    if (url?.startsWith("s3://") && UPLOAD_TO_S3) {
+        return await getPreSignedUrl(url)
+    }
+    return undefined
+}
+
+export async function editOrCreatePrint(state: EditFormState, formData: FormData): Promise<EditFormState> {
     if (!await isLoggedIn()) {
         state.error = "Log in expired."
         state.ok = false;
@@ -23,14 +34,25 @@ export async function editOrCreate(state: EditFormState, formData: FormData): Pr
         tags: (formData.get("tags") as string).split(",").map(s => s.trim()),
     }
     if (formData.get("removeImage") === "on" || !(state.pawPrint?.image || formData.get("src"))) {
-        console.log("Removing image");
+        const old = state.pawPrint?.image?.src
+        if (old && old.startsWith("s3://")) {
+            await deleteObject(old)
+        }
         print.image = null;
     } else {
         let url = state.pawPrint?.image?.src;
         const file = formData.get("src") as File
         if (file && file.size) {
-            const b64 = Buffer.from(await file.bytes()).toString("base64");
-            url = `data:${file.type};base64,${b64}`;
+            const buffer = Buffer.from(await file.arrayBuffer());
+            const contentType = file.type;
+            if (UPLOAD_TO_S3) {
+                const ext = path.extname(file.name);
+                const id = randomBytes(16).toString("hex")
+                url = await upload(buffer, `${id}${ext}`, contentType);
+            } else {
+                const b64 = buffer.toString("base64");
+                url = `data:${file.type};base64,${b64}`;
+            }
         }
         print.image = {
             src: url,
@@ -46,11 +68,13 @@ export async function editOrCreate(state: EditFormState, formData: FormData): Pr
         }
         return {
             pawPrint: result ?? undefined,
+            preSignedUrl: await conditionalPresign(state?.pawPrint?.image?.src),
             ok: true,
         }
     } else {
         return {
-            pawPrint: result ?? undefined,
+            pawPrint: state?.pawPrint ?? undefined,
+            preSignedUrl: await conditionalPresign(state?.pawPrint?.image?.src),
             error: "Error saving."
         }
     }

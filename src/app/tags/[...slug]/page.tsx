@@ -1,15 +1,23 @@
 import {getPrints} from "@/lib/data";
-import PawTrack from "@/components/PawTrack";
+import {InteractivePawTrack} from "@/components/PawTrack";
+import styles from "@/app/page.module.css";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import Link from "next/link";
+import {faX} from "@fortawesome/free-solid-svg-icons";
+import {preSignedPrints} from "@/lib/data/s3";
+import {Metadata} from "next";
+import {SITE_TITLE} from "@/lib/constants";
 
 export async function generateMetadata({
     params,
 }: {
     params: Promise<{ slug: string[] }>
-}) {
+}): Promise<Metadata> {
     const { slug } = await params;
     return {
-        title: `Tags: ${slug.join(", ")} - Amazon Paws`,
+        title: `Tags: ${slug.join(", ")} — ${SITE_TITLE}`,
         description: "The paw prints Amazon leaves on the world.",
+        robots: "noindex, follow"
     }
 }
 
@@ -19,11 +27,20 @@ export default async function Page({
     params: Promise<{ slug: string[] }>
 }) {
     const { slug } = await params;
-    const prints = await getPrints(undefined, undefined, undefined, slug);
+    const prints = await getPrints(undefined, undefined, slug);
+    const wrappedPrints = await preSignedPrints(prints);
+
     return (
         <>
-            <PawTrack initialPrints={prints} />
-            <a className="restart" href="/public">Load from beginning</a>
+            <div className="hint">
+                <h1>Filtered Paw Prints</h1>
+                <p>Filtered for: <i>{slug.join(", ")}</i></p>
+                <p>
+                    <Link href="/"><FontAwesomeIcon icon={faX}/> Remove filter</Link>
+                </p>
+            </div>
+            <InteractivePawTrack initialPrints={wrappedPrints} tags={slug} />
+            <a className={styles.top} href="#">Back To Top</a>
         </>
     )
 }

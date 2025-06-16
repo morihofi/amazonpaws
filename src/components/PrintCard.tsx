@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 import { Share, ShareMastodon } from "@/components/Share";
 import Image from "next/image";
+import Link from "next/link";
 
 type PawPrintProps = {
     print: PawPrint;
@@ -13,7 +14,7 @@ function figure(print: PawPrint) {
     if (print.image) {
         return (
             <figure>
-                <Image src={print.image.src} alt={print.image.alt} width={200} height={200} />
+                <img src={print.image.src} alt={print.image.alt} width={200} height={200} />
                 <figcaption>{print.image.caption}</figcaption>
             </figure>
         )
@@ -26,7 +27,7 @@ export default function PrintCard({ print }: PawPrintProps) {
             <div className={styles.dateAndShare}>
                 <p className={styles.date}>{print.date}</p>
                 <p className={styles.share}>
-                    <a href={`/print/${print.id}`}><FontAwesomeIcon icon={faLink} title="Permalink" /></a>
+                    <Link href={`/print/${print.id}`}><FontAwesomeIcon icon={faLink} title="Permalink" /></Link>
                     <Share print={print} />
                     <ShareMastodon print={print} />
                 </p>

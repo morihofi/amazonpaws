@@ -1,8 +1,10 @@
 'use server';
+import 'server-only'
 import {PawPrint} from "@/types/pawPrint";
 import {BSON, MongoClient, ObjectId, WithId} from "mongodb";
 import "../../envConfig"
 import {unstable_cache, unstable_expireTag} from "next/cache";
+import {PRINTS_PER_PAGE} from "@/lib/constants";
 
 async function getCollection() {
     const mongo = new MongoClient(process.env.MONGO_URL!);
@@ -69,18 +71,12 @@ export const getPrint = unstable_cache(async (id: string): Promise<PawPrint|null
  * Invalidate the cache with the `prints` key.
  */
 export const getPrints = unstable_cache(async (
-    maxResults: number = 10,
+    maxResults: number = PRINTS_PER_PAGE,
     pagination: number = 0,
-    dateStart: string = "",
     tags: string[] = [],
 ): Promise<PawPrint[]> => {
     const collection = await getCollection()
     const query: Record<string, unknown> = {};
-    if (dateStart) {
-        query["date"] ={
-                $lte: dateStart
-        }
-    }
     if (tags.length > 0) {
         query["tags"] = {
             $in: tags

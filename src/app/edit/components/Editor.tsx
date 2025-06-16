@@ -3,17 +3,15 @@ import Image from "next/image";
 import type { Image as PawImage, PawPrint } from "@/types/pawPrint";
 import styles from "../page.module.css";
 import { useActionState } from "react";
-import { editOrCreate } from "@/app/edit/actions/editOrCreate";
-
-
+import { editOrCreatePrint } from "@/app/edit/actions/editOrCreatePrint";
 
 type EditorProps = {
     print: PawPrint | undefined;
+    preSignedUrl?: string
 };
 
 function ImageEditor({ image }: { image: PawImage | null | undefined }) {
     return <>
-        <Preview src={image?.src} />
         <label>Image (File or URL)</label>
         <input name="src" type="file" accept="image/*" />
         <input name="removeImage" id="removeImage" type="checkbox" />
@@ -26,12 +24,14 @@ function ImageEditor({ image }: { image: PawImage | null | undefined }) {
 }
 
 function Preview({ src }: { src: string | undefined }) {
-    if (src) return <Image src={src} alt="" width={200} height={200} />
+    if (src) return <img src={src} alt="" width={200} height={200} />
     return <></>
 }
 
-export function Editor({ print }: EditorProps) {
-    const [state, action, pending] = useActionState(editOrCreate, {pawPrint: print})
+export function Editor({ print, preSignedUrl }: EditorProps) {
+    const [state, action, pending] = useActionState(editOrCreatePrint, {pawPrint: print, preSignedUrl: preSignedUrl})
+    const img = state.preSignedUrl ?? state.pawPrint?.image?.src ?? undefined;
+
     return <>
         <form className={styles.editor} action={action}>
             {pending && <p>Saving...</p>}
@@ -58,6 +58,7 @@ export function Editor({ print }: EditorProps) {
             </div>
             <div>
                 <h3>Image</h3>
+                <Preview src={img} />
                 <ImageEditor image={state.pawPrint?.image} />
             </div>
             <input type="submit" value="Save" />
