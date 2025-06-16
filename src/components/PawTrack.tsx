@@ -42,9 +42,9 @@ export function PawTrack({ initialPrints, children = [] }: TimelineProps) {
         <>
             <div className={styles.timeline}>
                 {initialPrints.map((print, idx) => (
-                    <article key={idx} className={`${styles.container} ${leftOrRight(idx)} ${isFirst(idx)}`}>
+                    <div key={idx} className={`${styles.container} ${leftOrRight(idx)} ${isFirst(idx)}`}>
                         <PrintCard key={print.id} print={print} />
-                    </article>
+                    </div>
                 ))}
 
                 {children}
