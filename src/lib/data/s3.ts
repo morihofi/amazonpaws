@@ -1,10 +1,7 @@
 'use server';
 import 'server-only'
 import {
-    BucketAlreadyExists,
-    CreateBucketCommand,
     DeleteObjectCommand, GetObjectCommand,
-    ListBucketsCommand,
     PutObjectCommand,
     S3Client
 } from "@aws-sdk/client-s3";
@@ -29,7 +26,7 @@ export const getS3Client = unstable_cache(async () => {
 
 export async function upload(buffer: Buffer, key: string, contentType: string|undefined = undefined): Promise<string> {
     const client = await getS3Client()
-    const _ = await client.send(new PutObjectCommand({
+    await client.send(new PutObjectCommand({
         Bucket: process.env.S3_BUCKET,
         Key: key,
         Body: buffer,
@@ -51,7 +48,7 @@ function parseS3Url(url: string) {
 
 export async function deleteObject(url: string) {
     const client = await getS3Client()
-    const _ = await client.send(new DeleteObjectCommand(
+    await client.send(new DeleteObjectCommand(
         parseS3Url(url)
     ))
 }

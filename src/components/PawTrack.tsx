@@ -97,10 +97,6 @@ export function InteractivePawTrack({ initialPrints, tags = [] }: InteractiveTim
 
     const [scrollTrigger, isInView] = useInView();
 
-    function sleep(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     async function loadMore() {
         setLoading(true);
         const more = await getPrints(PRINTS_PER_PAGE, offset, tags);
@@ -114,7 +110,7 @@ export function InteractivePawTrack({ initialPrints, tags = [] }: InteractiveTim
 
     useEffect(() => {
         if (isInView && hasMore && !loading) {
-            const _ = loadMore();
+            loadMore();
         }
     })
 

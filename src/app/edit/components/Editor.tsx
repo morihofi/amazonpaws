@@ -1,5 +1,4 @@
 'use client';
-import Image from "next/image";
 import type { Image as PawImage, PawPrint } from "@/types/pawPrint";
 import styles from "../page.module.css";
 import { useActionState } from "react";

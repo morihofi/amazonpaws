@@ -1,7 +1,7 @@
 import {getPrint} from "@/lib/data";
 import {redirect} from "next/navigation";
 import {Editor} from "@/app/edit/components/Editor";
-import {getPreSignedUrl, preSignedPrint} from "@/lib/data/s3";
+import {getPreSignedUrl} from "@/lib/data/s3";
 
 export default async function Page({
                                        params,

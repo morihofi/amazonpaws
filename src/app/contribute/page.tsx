@@ -1,5 +1,5 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBluesky, faGit, faGitAlt, faGithub, faMastodon} from "@fortawesome/free-brands-svg-icons";
+import {faBluesky, faGitAlt, faGithub, faMastodon} from "@fortawesome/free-brands-svg-icons";
 import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import {BSKY_ACCOUNT, BSKY_URL, MASTODON_ACCOUNT, MASTODON_URL} from "@/lib/constants";
 

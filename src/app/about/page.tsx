@@ -11,8 +11,8 @@ export default function AboutPage() {
         <h1>About</h1>
         <p>
             At Amazon Paws we document the impact of Amazon on the world and society.
-            It is not affiliated with Amazon in any way, but rather a critical examination of the company's actions.
-            The page layout is a parody on the style of "official" Amazon sites like "amazon.com",
+            It is not affiliated with Amazon in any way, but rather a critical examination of the company&#39;s actions.
+            The page layout is a parody on the style of &#34;official&#34; Amazon sites like &#34;amazon.com&#34;,
             for better linking Amazon with their behavior.
         </p>
 
@@ -28,9 +28,9 @@ export default function AboutPage() {
             Over the past there have been allegations of unfair business practices,
             and human an worker rights violations. Amazon Paws aims documents these problematic actions at a central place.
         </p>
-        <h2>Origin of the name "Amazon Paws"</h2>
+        <h2>Origin of the name &#34;Amazon Paws&#34;</h2>
         <p>
-            I frequently misread <em>amazonaws.com</em> (the domain for Amazon Web Service - AWS) as "amazonpaws.com".
+            I frequently misread <em>amazonaws.com</em> (the domain for Amazon Web Service - AWS) as &#34;amazonpaws.com&#34;.
             So I decided to register it for myself. It also sounds funny. <small style={{fontSize: "50%"}}>UwU</small>
         </p>
         <h2>Contributing</h2>
