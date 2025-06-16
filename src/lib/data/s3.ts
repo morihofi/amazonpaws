@@ -1,6 +1,7 @@
 'use server';
 import 'server-only'
 import {
+    BucketAlreadyExists,
     CreateBucketCommand,
     DeleteObjectCommand, GetObjectCommand,
     ListBucketsCommand,
@@ -15,7 +16,7 @@ import {PawPrint} from "@/types/pawPrint";
 import {UPLOAD_TO_S3} from "@/lib/constants";
 
 export const getS3Client = unstable_cache(async () => {
-    const s3 = new S3Client({
+    return new S3Client({
         credentials: {
             accessKeyId: process.env.S3_ACCESS_KEY,
             secretAccessKey: process.env.S3_SECRET_KEY
@@ -24,17 +25,6 @@ export const getS3Client = unstable_cache(async () => {
         forcePathStyle: process.env.S3_PATH_STYLE != undefined,
         region: process.env.S3_REGION
     })
-    const result = await s3.send(new ListBucketsCommand({}))
-    let found = false
-    if (result.Buckets) {
-        found = result.Buckets.find(bucket => bucket.Name == process.env.S3_BUCKET) != undefined
-    }
-    if (!found) {
-        await s3.send(new CreateBucketCommand({
-            Bucket: process.env.S3_BUCKET,
-        }))
-    }
-    return s3
 })
 
 export async function upload(buffer: Buffer, key: string, contentType: string|undefined = undefined): Promise<string> {
