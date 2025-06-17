@@ -8,6 +8,7 @@ function validateKey(key: string) {
     if (!process.env.AUTH_KEY) {
         return false;
     }
+
     return key === process.env.AUTH_KEY;
 }
 
