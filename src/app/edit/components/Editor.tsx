@@ -23,7 +23,7 @@ function ImageEditor({ image }: { image: PawImage | null | undefined }) {
 }
 
 function Preview({ src }: { src: string | undefined }) {
-    if (src) return <img src={src} alt="" width={200} height={200} />
+    if (src) return <img src={src} alt="" style={{maxHeight: "200px", maxWidth: "100%"}} />
     return <></>
 }
 

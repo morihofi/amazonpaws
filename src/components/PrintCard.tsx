@@ -13,7 +13,7 @@ function figure(print: PawPrint) {
     if (print.image?.src) {
         return (
             <figure>
-                <img src={print.image.src} alt={print.image.alt} height={200} />
+                <img src={print.image.src} alt={print.image.alt} style={{maxHeight: "200px", maxWidth: "100%"}} />
                 <figcaption>{print.image.caption}</figcaption>
             </figure>
         )
