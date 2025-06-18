@@ -1,12 +1,15 @@
 import {Feed, Item} from "feed";
 import {getPrints} from "@/lib/data/index";
+import {preSignedPrints} from "@/lib/data/s3";
 
 export async function getFeed(): Promise<Feed> {
-    const prints = await getPrints();
+    const printsWithS3 = await getPrints();
+    const prints = await preSignedPrints(printsWithS3);
     const feed = new Feed({
         title: "Amazon Paws",
         description: "The paw prints Amazon leaves on the world.",
-        id: "https://amazonpaws.com",
+        id: "https://amazonpaws.com/",
+        link: "https://amazonpaws.com/",
         language: "en",
         updated: new Date(prints[0]["date"]),
         copyright: "Some rights reserved",
@@ -20,18 +23,20 @@ export async function getFeed(): Promise<Feed> {
     prints.forEach(print => {
         const item: Item = {
             title: print.heading,
-            id: print.id,
+            id: `https://amazonpaws.com/print/${print.id}`,
             link: `https://amazonpaws.com/print/${print.id}`,
             description: print.text,
             content: print.text,
             date: new Date(print.date),
         };
-        if (print.image) {
+        if (print.image?.src) {
             item.image = {
-                url: print.image.src,
+                url: print.image.src.replaceAll("&", "&amp;"),
                 title: print.image.caption || print.image.alt,
-                type: print.image.src.substring(5).split(';')[0],
             };
+            if (item.image.url.startsWith("data:")) {
+                item.image.type = print.image.src.substring(5).split(';')[0]
+            }
         }
         feed.addItem(item)
     })
