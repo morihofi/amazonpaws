@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 import { Share, ShareMastodon } from "@/components/Share";
 import Link from "next/link";
-import Image from "next/image";
 
 type PawPrintProps = {
     print: PawPrint;
@@ -14,7 +13,7 @@ function figure(print: PawPrint) {
     if (print.image?.src) {
         return (
             <figure>
-                <img src={print.image.src} alt={print.image.alt} width={200} height={200} />
+                <img src={print.image.src} alt={print.image.alt} height={200} />
                 <figcaption>{print.image.caption}</figcaption>
             </figure>
         )
