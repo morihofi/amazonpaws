@@ -27,14 +27,15 @@ export default async function Page({
     params: Promise<{ slug: string[] }>
 }) {
     const { slug } = await params;
-    const prints = await getPrints(undefined, undefined, slug);
+    const decoded = slug.map(decodeURI);
+    const prints = await getPrints(undefined, undefined, decoded);
     const wrappedPrints = await preSignedPrints(prints);
 
     return (
         <>
             <div className="hint">
                 <h1>Filtered Paw Prints</h1>
-                <p>Filtered for: <i>{slug.join(", ")}</i></p>
+                <p>Filtered for: <i>{decoded.join(", ")}</i></p>
                 <p>
                     <Link href="/"><FontAwesomeIcon icon={faX}/> Remove filter</Link>
                 </p>
