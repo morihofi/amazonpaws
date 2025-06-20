@@ -13,6 +13,9 @@ export async function generateMetadata({
     params: Promise<{ slug: string }>
 }): Promise<Metadata> {
     const { slug } = await params;
+    if (slug.length != 24) {
+        return notFound()
+    }
     const print = await getPrint(slug);
     if (!print) {
         return notFound()

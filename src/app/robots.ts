@@ -1,6 +1,11 @@
 import type { MetadataRoute } from 'next'
+import {generateSitemaps as generatePrintSitemaps} from "@/app/print/sitemap";
 
-export default function robots(): MetadataRoute.Robots {
+export const dynamic = 'force-dynamic'
+
+export default async function robots(): Promise<MetadataRoute.Robots> {
+    const sitemaps = ['/sitemap.xml']
+    sitemaps.push(...(await generatePrintSitemaps()).map(( {id}) => `/print/sitemap/${id}.xml`))
     return {
         rules: [
             {
@@ -13,6 +18,7 @@ export default function robots(): MetadataRoute.Robots {
                 userAgent: 'amazonbot',
                 disallow: '/',
             }
-        ]
+        ],
+        sitemap: sitemaps
     }
 }

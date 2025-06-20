@@ -8,3 +8,5 @@ export const MASTODON_URL = 'https://climatejustice.social/@amazonpaws'
 export const MASTODON_ACCOUNT = '@amazonpaws@climatejustice.social'
 export const BSKY_URL = 'https://bsky.app/profile/amazonpaws.com'
 export const BSKY_ACCOUNT = '@amazonpaws.com'
+
+export const BASE_URL = 'https://amazonpaws.com'

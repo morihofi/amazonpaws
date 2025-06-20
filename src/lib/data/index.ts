@@ -25,6 +25,11 @@ function convert(response: WithId<BSON.Document>): PawPrint {
     }
 }
 
+export async function getPrintsCount() {
+    const collection = await getCollection()
+    return await collection.estimatedDocumentCount()
+}
+
 export async function insertOrUpdate(print: PawPrint) {
     const collection = await getCollection()
     let oid: ObjectId
