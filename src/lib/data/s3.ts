@@ -14,19 +14,24 @@ import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
 import {PawPrint} from "@/types/pawPrint";
 import {UPLOAD_TO_S3} from "@/lib/constants";
 
+let _s3: S3Client | undefined = undefined;
+
 /**
  * Get the s3 client as configured by env variables.
  */
-function getS3Client() {
-    return new S3Client({
-        credentials: {
-            accessKeyId: process.env.S3_ACCESS_KEY,
-            secretAccessKey: process.env.S3_SECRET_KEY
-        } as AwsCredentialIdentity,
-        endpoint: process.env.S3_ENDPOINT,
-        forcePathStyle: process.env.S3_PATH_STYLE != undefined,
-        region: process.env.S3_REGION
-    })
+function getS3Client(): S3Client {
+    if (_s3 == undefined) {
+        _s3 = new S3Client({
+            credentials: {
+                accessKeyId: process.env.S3_ACCESS_KEY,
+                secretAccessKey: process.env.S3_SECRET_KEY
+            } as AwsCredentialIdentity,
+            endpoint: process.env.S3_ENDPOINT,
+            forcePathStyle: process.env.S3_PATH_STYLE != undefined,
+            region: process.env.S3_REGION
+        })
+    }
+    return _s3
 }
 
 /**

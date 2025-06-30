@@ -6,10 +6,14 @@ import "../../envConfig"
 import {unstable_cache, unstable_expireTag} from "next/cache";
 import {PRINTS_PER_PAGE} from "@/lib/constants";
 
+let _mongo: MongoClient | undefined = undefined;
+
 async function getCollection() {
-    const mongo = new MongoClient(process.env.MONGO_URL!);
-    await mongo.connect();
-    const db = mongo.db(process.env.MONGO_DB || "paws");
+    if (_mongo == undefined) {
+        _mongo = new MongoClient(process.env.MONGO_URL!);
+        await _mongo.connect();
+    }
+    const db = _mongo.db(process.env.MONGO_DB || "paws");
     return db.collection("prints");
 }
 
