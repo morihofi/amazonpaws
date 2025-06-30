@@ -2,8 +2,11 @@ import { PawPrint } from "@/types/pawPrint";
 import styles from "./PrintCard.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
-import {Share, ShareBluesky, ShareMastodon} from "@/components/Share";
 import Link from "next/link";
+import Share from "@/components/Share";
+import ShareBluesky from "@/components/ShareBluesky";
+import ShareMastodon from "@/components/ShareMastodon";
+
 
 type PawPrintProps = {
     print: PawPrint;
