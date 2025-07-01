@@ -1,9 +1,12 @@
 import {Feed, Item} from "feed";
 import {getPrints} from "@/lib/data/index";
 import {preSignedPrints} from "@/lib/data/s3";
+import {PawPrintDate} from "@/types/pawPrint";
+
+const PRINTS = 20;
 
 export async function getFeed(): Promise<Feed> {
-    const printsWithS3 = await getPrints();
+    const printsWithS3 = await getPrints(PRINTS, undefined, undefined, true);
     const prints = await preSignedPrints(printsWithS3);
     const feed = new Feed({
         title: "Amazon Paws",
@@ -20,14 +23,15 @@ export async function getFeed(): Promise<Feed> {
             "json": "https://amazonpaws.com/feeds/json",
         }
     })
-    prints.forEach(print => {
+    for (const print of prints) {
         const item: Item = {
-            title: print.heading,
+            title: `${print.date}: ${print.heading}`,
             id: `https://amazonpaws.com/print/${print.id}`,
             link: `https://amazonpaws.com/print/${print.id}`,
             description: print.text,
             content: print.text,
-            date: new Date(print.date),
+            date: new Date(print.modifiedDate ?? PawPrintDate(print)),
+            published: new Date(PawPrintDate(print))
         };
         if (print.image?.src) {
             item.image = {
@@ -36,9 +40,21 @@ export async function getFeed(): Promise<Feed> {
             };
             if (item.image.url.startsWith("data:")) {
                 item.image.type = print.image.src.substring(5).split(';')[0]
+                item.image.length = Buffer.from(item.image.url.split(',')[1], 'base64').length
+            } else {
+                try {
+                    // Mhm. This could be done more efficiently, I guess.
+                    const result = await fetch(print.image.src, {cache: 'force-cache'})
+                    if (result.ok) {
+                        item.image.type = result.headers.get('content-type')?.split(';')[0]
+                        item.image.length = parseInt(result.headers.get('content-length') ?? '0')
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch image", print.image.src, e)
+                }
             }
         }
         feed.addItem(item)
-    })
+    }
     return feed;
 }

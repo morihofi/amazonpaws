@@ -32,6 +32,7 @@ export async function editOrCreatePrint(state: EditFormState, formData: FormData
         image: state.pawPrint?.image ?? null,
         sources: (formData.get("sources") as string).split("\n").map(s => s.trim()),
         tags: (formData.get("tags") as string).split(",").map(s => s.trim()),
+        modifiedDate: new Date().toISOString(),  // Refresh modified data on every edit
     }
     if (formData.get("removeImage") === "on" || !(state.pawPrint?.image || formData.get("src"))) {
         const old = state.pawPrint?.image?.src

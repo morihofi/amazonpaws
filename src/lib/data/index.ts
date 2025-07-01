@@ -25,7 +25,8 @@ function convert(response: WithId<BSON.Document>): PawPrint {
         date: response["date"],
         tags: response["tags"] || [],
         sources: response["sources"] || [],
-        image: response["image"] || null
+        image: response["image"] || null,
+        modifiedDate: response["modifiedDate"],
     }
 }
 
@@ -83,6 +84,7 @@ export const getPrints = unstable_cache(async (
     maxResults: number = PRINTS_PER_PAGE,
     pagination: number = 0,
     tags: string[] = [],
+    byCreationDate: boolean = false,
 ): Promise<PawPrint[]> => {
     const collection = await getCollection()
     const query: Record<string, unknown> = {};
@@ -91,7 +93,14 @@ export const getPrints = unstable_cache(async (
             $in: tags
         }
     }
-    let cursor = collection.find(query).sort({"date": -1})
+    let cursor = collection.find(query)
+    if (byCreationDate) {
+        // The object id starts with a timestamp
+        // Hm... I wonder what will happen in 2038?
+        cursor = cursor.sort({"_id": -1})
+    } else {
+        cursor = cursor.sort({"date": -1})
+    }
     if (maxResults) {
         cursor = cursor.limit(maxResults).skip(pagination)
     }

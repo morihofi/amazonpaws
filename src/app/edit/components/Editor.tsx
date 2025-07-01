@@ -1,5 +1,5 @@
 'use client';
-import type { Image as PawImage, PawPrint } from "@/types/pawPrint";
+import {Image as PawImage, PawPrint, PawPrintDate} from "@/types/pawPrint";
 import styles from "../page.module.css";
 import { useActionState } from "react";
 import { editOrCreatePrint } from "@/app/edit/actions/editOrCreatePrint";
@@ -11,14 +11,14 @@ type EditorProps = {
 
 function ImageEditor({ image }: { image: PawImage | null | undefined }) {
     return <>
-        <label>Image (File or URL)</label>
-        <input name="src" type="file" accept="image/*" />
+        <label htmlFor={"src"}>Image (File or URL)</label>
+        <input name="src" id={"src"} type="file" accept="image/*" />
         <input name="removeImage" id="removeImage" type="checkbox" />
         <label htmlFor={"removeImage"}>Remove Image</label>
-        <label>Caption</label>
-        <input name="caption" defaultValue={image?.caption ?? ""} />
-        <label>Alt-Text</label>
-        <input name="alt" defaultValue={image?.alt ?? ""} />
+        <label htmlFor={"caption"}>Caption</label>
+        <input name="caption" id={"caption"} defaultValue={image?.caption ?? ""} />
+        <label htmlFor={"alt"}>Alt-Text</label>
+        <input name="alt" id={"alt"} defaultValue={image?.alt ?? ""} />
     </>
 }
 
@@ -36,24 +36,32 @@ export function Editor({ print, preSignedUrl }: EditorProps) {
             {pending && <p>Saving...</p>}
             {state.pawPrint?.id ? <input type="hidden" name="id" defaultValue={state.pawPrint.id} /> : <span/>}
             <div>
-                <label>Heading</label>
-                <input name="heading" defaultValue={state.pawPrint?.heading ?? ""} required={true} />
+                <label htmlFor={"heading"}>Heading</label>
+                <input name="heading" id={"heading"} defaultValue={state.pawPrint?.heading ?? ""} required={true} />
             </div>
             <div>
-                <label>Date</label>
-                <input name="date" type="date" defaultValue={state.pawPrint?.date ?? ""} required={true} />
+                <label htmlFor={"date"}>Date</label>
+                <input name="date" type="date" id={"date"} defaultValue={state.pawPrint?.date ?? ""} required={true} />
             </div>
             <div>
-                <label>Text</label>
-                <textarea name="text" defaultValue={state.pawPrint?.text ?? ""} required={true} />
+                <label htmlFor={"postDate"}>Post Date</label>
+                <input name="date" disabled={true} id={"postDate"} defaultValue={(state.pawPrint?.id ? PawPrintDate(state.pawPrint) : "-")} required={true} />
             </div>
             <div>
-                <label>Tags (Comma separated)</label>
-                <input name="tags" defaultValue={state.pawPrint?.tags.join(", ") ?? ""} required={true} />
+                <label htmlFor={"modifiedDate"}>Modified Date</label>
+                <input name="date" disabled={true}  id={"modifiedDate"} defaultValue={state.pawPrint?.modifiedDate ?? "-"} required={true} />
             </div>
             <div>
-                <label>Sources (New-line separated)</label>
-                <textarea name="sources" defaultValue={state.pawPrint?.sources.join("\n") ?? ""} required={true} />
+                <label htmlFor={"text"}>Text</label>
+                <textarea name="text" id={"text"} defaultValue={state.pawPrint?.text ?? ""} required={true} />
+            </div>
+            <div>
+                <label htmlFor={"tags"}>Tags (Comma separated)</label>
+                <input name="tags" id={"tags"} defaultValue={state.pawPrint?.tags.join(", ") ?? ""} required={true} />
+            </div>
+            <div>
+                <label htmlFor={"sources"}>Sources (New-line separated)</label>
+                <textarea name="sources" id={"tags"} defaultValue={state.pawPrint?.sources.join("\n") ?? ""} required={true} />
             </div>
             <div>
                 <h3>Image</h3>
